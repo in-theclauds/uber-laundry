@@ -10,7 +10,11 @@ const logger       = require('morgan');
 const path         = require('path');
 const index        = require('./routes/index');
 const authRoutes   = require('./routes/auth');
+const bodyParser   = require('body-parser');
+const session      = require('express-session');
+const MongoStore   = require('connect-mongo')(session);
 
+const index = require('./routes/index');
 
 
 mongoose.Promise = Promise;

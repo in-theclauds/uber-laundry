@@ -13,6 +13,8 @@ router.get('/signup', (req, res, next) => {
   });
 });
 
+
+//beggining of signup post route
 router.post('/signup', (req, res, next) => {
   const nameInput = req.body.name;
   const emailInput = req.body.email;
@@ -59,6 +61,14 @@ router.post('/signup', (req, res, next) => {
 
       res.redirect('/');
     });
+  });
+});
+
+//end signup post route
+
+router.get('/login', (req, res, next) => {
+  res.render('auth/login', {
+    errorMessage: ''
   });
 });
 
