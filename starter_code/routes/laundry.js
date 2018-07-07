@@ -13,6 +13,32 @@ router.use((req, res, next) => {
 });
 
 router.get('/dashboard', (req, res, next) => {
+  let query;
+
+  if (req.session.currentUser.isLaunderer) {
+    query = { launderer: req.session.currentUser._id };
+  } else {
+    query = { user: req.session.currentUser._id };
+  }
+
+  LaundryPickup
+    .find(query)
+    .populate('user', 'name')
+    .populate('launderer', 'name')
+    .sort('pickupDate')
+    .exec((err, pickupDocs) => {
+      if (err) {
+        next(err);
+        return;
+      }
+
+      res.render('laundry/dashboard', {
+        pickups: pickupDocs
+      });
+    });
+});
+
+router.get('/dashboard', (req, res, next) => {
   res.render('laundry/dashboard');
 });
 
@@ -72,5 +98,30 @@ router.post('/laundry-pickups', (req, res, next) => {
   });
 });
 
+router.get('/dashboard', (req, res, next) => {
+  let query;
+
+  if (req.session.currentUser.isLaunderer) {
+    query = { launderer: req.session.currentUser._id };
+  } else {
+    query = { user: req.session.currentUser._id };
+  }
+
+  LaundryPickup
+    .find(query)
+    .populate('user', 'name')
+    .populate('launderer', 'name')
+    .sort('pickupDate')
+    .exec((err, pickupDocs) => {
+      if (err) {
+        next(err);
+        return;
+      }
+
+      res.render('laundry/dashboard', {
+        pickups: pickupDocs
+      });
+    });
+});
 
 module.exports = router;
