@@ -15,6 +15,8 @@ const bodyParser   = require('body-parser');
 const session      = require('express-session');
 const MongoStore   = require('connect-mongo')(session);
 const index        = require('./routes/index');
+const authRoutes = require('./routes/auth');
+const laundryRoutes = require('./routes/laundry');
 
 
 mongoose.Promise = Promise;
@@ -52,6 +54,7 @@ app.use(session({
 // wiring our routes>auth.js with the app.js
 app.use('/', index);
 app.use('/', authRoutes);
+app.use('/', laundryRoutes);
 
 
 // Express View engine setup
