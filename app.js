@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+
 const bodyParser   = require('body-parser');
 const cookieParser = require('cookie-parser');
 const express      = require('express');
@@ -13,8 +14,7 @@ const authRoutes   = require('./routes/auth');
 const bodyParser   = require('body-parser');
 const session      = require('express-session');
 const MongoStore   = require('connect-mongo')(session);
-
-const index = require('./routes/index');
+const index        = require('./routes/index');
 
 
 mongoose.Promise = Promise;
@@ -36,6 +36,18 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  secret: 'never do your own laundry again',
+  resave: true,
+  saveUninitialized: true,
+  cookie: { maxAge: 60000 },
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+    ttl: 24 * 60 * 60 // 1 day
+  })
+}));
 
 // wiring our routes>auth.js with the app.js
 app.use('/', index);
@@ -43,7 +55,6 @@ app.use('/', authRoutes);
 
 
 // Express View engine setup
-
 app.use(require('node-sass-middleware')({
   src:  path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),
