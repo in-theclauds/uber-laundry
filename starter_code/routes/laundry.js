@@ -1,7 +1,6 @@
 const express   = require('express');
-
 const User      = require('../models/user');
-
+const LaundryPickup = require('../models/laundry-pickup');
 const router    = express.Router();
 
 router.use((req, res, next) => {
@@ -38,7 +37,40 @@ router.post('/launderers', (req, res, next) => {
   
 });
 
+router.get('/launderers/:id', (req, res, next) => {
+  const laundererId = req.params.id;
 
+  User.findById(laundererId, (err, theUser) => {
+    if (err) {
+      next(err);
+      return;
+    }
+
+    res.render('laundry/launderer-profile', {
+      theLaunderer: theUser
+    });
+  });
+});
+
+
+router.post('/laundry-pickups', (req, res, next) => {
+  const pickupInfo = {
+    pickupDate: req.body.pickupDate,
+    launderer: req.body.laundererId,
+    user: req.session.currentUser._id
+  };
+
+  const thePickup = new LaundryPickup(pickupInfo);
+
+  thePickup.save((err) => {
+    if (err) {
+      next(err);
+      return;
+    }
+
+    res.redirect('/dashboard');
+  });
+});
 
 
 module.exports = router;
