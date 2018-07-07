@@ -1,4 +1,10 @@
 <p>Welcome to {{title}}</p>
+
+{{#if isUserLoggedIn { }}
+  <p> Hello, {{ currentUserInfo.name }}. </p>
+{{/if}}
+
+
 <nav>
   <ul>
     <li> <a href="/signup"> Sign Up </a> </li>
